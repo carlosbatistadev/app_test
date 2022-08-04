@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'app_widget.dart';
+import 'presenter/home/home_controller.dart';
 
 void main() {
   Get.lazyPut(() {
@@ -21,6 +22,8 @@ void main() {
 
     return connect;
   });
+
+  Get.put(HomeController());
 
   runApp(const AppWidget());
 }

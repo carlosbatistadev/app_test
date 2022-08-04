@@ -1,5 +1,6 @@
 import 'package:app_test/models/viacep_model.dart';
 import 'package:app_test/providers/viacep_provider.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../shared/utils/snackbar_util.dart';
@@ -8,8 +9,28 @@ import '../../shared/utils/snackbar_util.dart';
 // Controller conhece apenas Providers
 // Provider conhece o Repository
 
-class HomeController extends GetxController {
+class HomeController extends GetxController with WidgetsBindingObserver {
+  @override
+  void onInit() {
+    super.onInit();
+
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state != AppLifecycleState.resumed) {
+      setIsLocked(true);
+    }
+  }
+
   final provider = ViaCepProvider();
+
+  bool isLocked = false;
+  void setIsLocked(bool value) {
+    isLocked = value;
+    update();
+  }
 
   String cep = '';
   void changeCep(String value) => cep = value;

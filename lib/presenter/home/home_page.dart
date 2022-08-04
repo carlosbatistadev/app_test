@@ -6,7 +6,7 @@ import 'home_controller.dart';
 class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
 
-  final controller = Get.put(HomeController());
+  final controller = Get.find<HomeController>();
 
   @override
   Widget build(BuildContext context) {
@@ -22,28 +22,39 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              const SizedBox(height: 20),
-              TextField(
-                decoration: const InputDecoration(
-                  labelText: 'CEP',
-                  prefixIcon: Icon(Icons.house),
-                  border: OutlineInputBorder(),
+      body: GetBuilder<HomeController>(builder: (_) {
+        if (_.isLocked) {
+          return GestureDetector(
+            onTap: () => _.setIsLocked(false),
+            child: const Center(
+              child: Text('Tela bloqueada!'),
+            ),
+          );
+        }
+
+        return SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                const SizedBox(height: 20),
+                TextField(
+                  decoration: const InputDecoration(
+                    labelText: 'CEP',
+                    prefixIcon: Icon(Icons.house),
+                    border: OutlineInputBorder(),
+                  ),
+                  onChanged: controller.changeCep,
                 ),
-                onChanged: controller.changeCep,
-              ),
-              const SizedBox(height: 20),
-              GetBuilder<HomeController>(
-                builder: (_) => Text(controller.resultCep.toString()),
-              ),
-            ],
+                const SizedBox(height: 20),
+                GetBuilder<HomeController>(
+                  builder: (_) => Text(controller.resultCep.toString()),
+                ),
+              ],
+            ),
           ),
-        ),
-      ),
+        );
+      }),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: controller.searchDefaultCep,
         label: const Text('Buscar'),
